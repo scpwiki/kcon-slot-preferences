@@ -1,0 +1,7 @@
+# Artifacts
+node_modules/
+# parser.js is generated, but are committing it here for the web page
+
+# Misc
+.*.sw?
+*~
