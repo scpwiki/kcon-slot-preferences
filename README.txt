@@ -43,6 +43,8 @@ All of the above can be composed. So the following are all valid syntax:
 
     [lowest 500X, lowest 50X0, lowest 5X00], 5999, (5107, 5170)
 
+    5007, highest 5X72, 5201, lowest fixed 50XX
+
 Note that when executed parseAndListPreferences() or listPreferences(), you can pass in a list of unavailable slots. This is useful for instance, for blocking the X000 slot itself (since it is always the first-place prize), or for 9kon, blocking 9999).
 
 In particular, this is useful for actual slot assignment - at the conclusion of a contest, you run through each article by score order and add all slots which have already been taken by higher winners.
