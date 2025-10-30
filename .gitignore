@@ -1,4 +1,5 @@
 # Artifacts
+package-lock.json
 node_modules/
 # parser.js is generated, but are committing it here for the web page
 

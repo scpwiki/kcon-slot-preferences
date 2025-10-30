@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "nearley": "^2.20.1"
+  },
+  "scripts": {
+    "build": "nearleyc parser.ne -o parser.js",
+    "test": "nearley-test parser.js -q -i"
+  }
+}
