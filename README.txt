@@ -30,8 +30,7 @@ To illustrate, consider these two patterns:
 The first makes a list starting with 5001, 5002, 5003, 5004, 5005 etc.
 The second makes a list starting with 5011, 5022, 5033, 5044, 5055, etc.
 
-Note that there are many fewer fixed options. By definition, for any given pattern,
-there can be at most 10 variants emitted.
+Note that there are many fewer fixed options. By definition, for any given pattern, there can be at most 10 variants emitted.
 
 The "fixed" modifer has no effect on patterns with only a single placeholder digit.
 
