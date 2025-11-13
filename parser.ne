@@ -8,7 +8,8 @@ const lexer = moo.compile({
     pattern: /[xX0-9]{4}/,
     highest: /high(?:est)?|big(?:gest)?|large(?:st)?/,
     lowest: /low(?:est)?|small(?:est)?/,
-    fixed: /fixed|same|eq/,
+    fixed: /fixed|same/,
+    incr: /incremental|incr|sequential|seq/,
     '(': '(',
     ')': ')',
     '[': '[',
@@ -39,11 +40,11 @@ number -> %number {% (d) => parseInt(d[0].value) %}
 
 pattern -> %pattern {% extractRawPattern %}
 
-highest -> %highest _ pattern {% extractPattern('highest', false, 2) %}
-         | %highest _ %fixed _ pattern {% extractPattern('highest', true, 4) %}
+highest -> %highest _ %fixed _ pattern {% extractPattern('highest', true) %}
+         | %highest _ %incr _ pattern {% extractPattern('highest', false) %}
 
-lowest -> %lowest _ pattern {% extractPattern('lowest', false, 2) %}
-        | %lowest _ %fixed _ pattern {% extractPattern('lowest', true, 4) %}
+lowest -> %lowest _ %fixed _ pattern {% extractPattern('lowest', true) %}
+        | %lowest _ %incr _ pattern {% extractPattern('lowest', false) %}
 
 _ -> null | %space {% empty %}
 
@@ -77,9 +78,9 @@ function extractRawPattern(d) {
     return digits;
 }
 
-function extractPattern(order, fixed, index) {
+function extractPattern(order, fixed) {
     return function (d) {
-        return { order, fixed, pattern: d[index] };
+        return { order, fixed, pattern: d[4] };
     };
 }
 
