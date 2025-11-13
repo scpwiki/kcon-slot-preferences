@@ -12,7 +12,8 @@ const lexer = moo.compile({
     pattern: /[xX0-9]{4}/,
     highest: /high(?:est)?|big(?:gest)?|large(?:st)?/,
     lowest: /low(?:est)?|small(?:est)?/,
-    fixed: /fixed|same|eq/,
+    fixed: /fixed|same/,
+    incr: /incremental|incr|sequential|seq/,
     '(': '(',
     ')': ')',
     '[': '[',
@@ -51,9 +52,9 @@ function extractRawPattern(d) {
     return digits;
 }
 
-function extractPattern(order, fixed, index) {
+function extractPattern(order, fixed) {
     return function (d) {
-        return { order, fixed, pattern: d[index] };
+        return { order, fixed, pattern: d[4] };
     };
 }
 
@@ -85,10 +86,10 @@ var grammar = {
     {"name": "list_item", "symbols": ["_", {"literal":","}, "_", "expr"], "postprocess": nth(3)},
     {"name": "number", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": (d) => parseInt(d[0].value)},
     {"name": "pattern", "symbols": [(lexer.has("pattern") ? {type: "pattern"} : pattern)], "postprocess": extractRawPattern},
-    {"name": "highest", "symbols": [(lexer.has("highest") ? {type: "highest"} : highest), "_", "pattern"], "postprocess": extractPattern('highest', false, 2)},
-    {"name": "highest", "symbols": [(lexer.has("highest") ? {type: "highest"} : highest), "_", (lexer.has("fixed") ? {type: "fixed"} : fixed), "_", "pattern"], "postprocess": extractPattern('highest', true, 4)},
-    {"name": "lowest", "symbols": [(lexer.has("lowest") ? {type: "lowest"} : lowest), "_", "pattern"], "postprocess": extractPattern('lowest', false, 2)},
-    {"name": "lowest", "symbols": [(lexer.has("lowest") ? {type: "lowest"} : lowest), "_", (lexer.has("fixed") ? {type: "fixed"} : fixed), "_", "pattern"], "postprocess": extractPattern('lowest', true, 4)},
+    {"name": "highest", "symbols": [(lexer.has("highest") ? {type: "highest"} : highest), "_", (lexer.has("fixed") ? {type: "fixed"} : fixed), "_", "pattern"], "postprocess": extractPattern('highest', true)},
+    {"name": "highest", "symbols": [(lexer.has("highest") ? {type: "highest"} : highest), "_", (lexer.has("incr") ? {type: "incr"} : incr), "_", "pattern"], "postprocess": extractPattern('highest', false)},
+    {"name": "lowest", "symbols": [(lexer.has("lowest") ? {type: "lowest"} : lowest), "_", (lexer.has("fixed") ? {type: "fixed"} : fixed), "_", "pattern"], "postprocess": extractPattern('lowest', true)},
+    {"name": "lowest", "symbols": [(lexer.has("lowest") ? {type: "lowest"} : lowest), "_", (lexer.has("incr") ? {type: "incr"} : incr), "_", "pattern"], "postprocess": extractPattern('lowest', false)},
     {"name": "_", "symbols": []},
     {"name": "_", "symbols": [(lexer.has("space") ? {type: "space"} : space)], "postprocess": empty}
 ]
