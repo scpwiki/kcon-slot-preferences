@@ -11,6 +11,8 @@ You can specify a list of particular numbers:
 
 You can also use parentheses or brackets to group choices if you wish:
 
+    [5010, 5015, 5020]
+
     (5001, 5002, 5003), (5100, 5200, 5300)
 
 This also supports PATTERNS. All patterns require an order:
