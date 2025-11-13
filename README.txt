@@ -15,36 +15,51 @@ You can also use parentheses or brackets to group choices if you wish:
 
     (5001, 5002, 5003), (5100, 5200, 5300)
 
-This also supports PATTERNS. All patterns require an order:
+This also supports PATTERNS. All patterns require an order ("lowest" or "highest"), followed by a pattern type ("fixed" or "incremental"). For instance:
 
-    lowest 5XXX
-    highest 5XXX
+    lowest fixed 5XXX
+    highest incremental 5XXX
+
+There are also aliases:
+
+    lowest, smallest
+    highest, biggest, largest
+
+    fixed, same
+    incremental, sequential, incr, seq
+
+First, to explain ordering. Let us assume INCREMENTAL patterns:
+
+    smallest seq 5XXX
+    largest seq 5XXX
 
 The first will make a list starting with 5001, 5002, 5003, etc.
 The second will make a list starting with 5999, 5998, 5997, etc.
 
+This treats all the Xs as a series of digits to be filled in order, thus the name "incremental" or "sequential".
+
 There are also FIXED patterns. These require that all placeholder digits have the same value.
 To illustrate, consider these two patterns:
 
-    lowest 50XX
-    lowest fixed 50XX
+    lowest incr 5XXX
+    lowest fixed 5XXX
 
 The first makes a list starting with 5001, 5002, 5003, 5004, 5005 etc.
-The second makes a list starting with 5011, 5022, 5033, 5044, 5055, etc.
+The second makes a list starting with 5111, 5222, 5333, 5444, 5555, etc.
 
 Note that there are many fewer fixed options. By definition, for any given pattern, there can be at most 10 variants emitted.
 
-The "fixed" modifer has no effect on patterns with only a single placeholder digit.
+All patterns must explicitly specify if they are INCREMENTAL or FIXED.
 
-All of the above can be composed. So the following are all valid syntax:
+Each kind of specifier can be composed. So the following are all valid syntax:
 
-    (highest 599X, 5002), 5022, lowest fixed 5XX0
+    (highest incr 599X, 5002), 5022, lowest fixed 5XX0
 
     5013, 5017, 5019, 5023, 5027
 
-    [lowest 500X, lowest 50X0, lowest 5X00], 5999, (5107, 5170)
+    [smallest seq 500X, smallest seq 50X0, smallest seq 5X00], 5999, (5107, 5170)
 
-    5007, highest 5X72, 5201, lowest fixed 50XX
+    5007, highest same 5X72, 5201, lowest same 50XX
 
 Note that when executing parseAndListPreferences() or listPreferences(), you can pass in a list of unavailable slots. This is useful for instance, for blocking the X000 slot itself (since it is always the first-place prize, or for 9kon, blocking 9999).
 
