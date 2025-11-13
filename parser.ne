@@ -21,16 +21,16 @@ const lexer = moo.compile({
 
 @lexer lexer
 
-main ->   expr {% id %}
-        | list {% id %}
+main -> expr {% id %}
+      | list {% id %}
 
-expr ->   number {% list %}
-        | highest {% list %}
-        | lowest {% list %}
-        | "(" _ list _ ")" {% nth(2) %}
-        | "[" _ list _ "]" {% nth(2) %}
-        | "(" _ expr _ ")" {% nth(2) %}
-        | "[" _ expr _ "]" {% nth(2) %}
+expr -> number {% list %}
+      | highest {% list %}
+      | lowest {% list %}
+      | "(" _ list _ ")" {% nth(2) %}
+      | "[" _ list _ "]" {% nth(2) %}
+      | "(" _ expr _ ")" {% nth(2) %}
+      | "[" _ expr _ "]" {% nth(2) %}
 
 list -> expr list_item:+ _ ",":? {% extractList %}
 
