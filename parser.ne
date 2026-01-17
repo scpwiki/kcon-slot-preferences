@@ -10,10 +10,6 @@ const lexer = moo.compile({
     lowest: /low(?:est)?|small(?:est)?/,
     fixed: /fixed|same/,
     incr: /incremental|incr|sequential|seq/,
-    '(': '(',
-    ')': ')',
-    '[': '[',
-    ']': ']',
     ',': ',',
 });
 
@@ -27,10 +23,6 @@ main -> expr {% id %}
 expr -> number {% list %}
       | highest {% list %}
       | lowest {% list %}
-      | "(" _ list _ ")" {% nth(2) %}
-      | "[" _ list _ "]" {% nth(2) %}
-      | "(" _ expr _ ")" {% nth(2) %}
-      | "[" _ expr _ "]" {% nth(2) %}
 
 list -> expr list_item:+ _ ",":? {% extractList %}
 
