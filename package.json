@@ -4,6 +4,6 @@
   },
   "scripts": {
     "build": "nearleyc parser.ne -o parser.js",
-    "test": "nearley-test parser.js -q -i"
+    "parse": "nearley-test parser.js -q -i"
   }
 }
