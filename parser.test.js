@@ -16,6 +16,18 @@ test('1-item lists ignore trailing commas', () => {
   testWhitespace('5000 ,', [5000]);
 });
 
+test('1-item lists with bracket syntax', () => {
+  testWhitespace('[5000]', [5000]);
+  testWhitespace('[ 5000]', [5000]);
+  testWhitespace('[5000 ]', [5000]);
+  testWhitespace('[ 5000 ]', [5000]);
+
+  testWhitespace('[5000,]', [5000]);
+  testWhitespace('[ 5000,]', [5000]);
+  testWhitespace('[5000, ]', [5000]);
+  testWhitespace('[ 5000, ]', [5000]);
+});
+
 test('2-item lists ignore whitespace', () => {
   testWhitespace('5000,5001', [5000, 5001]);
   testWhitespace('5000, 5001', [5000, 5001]);
