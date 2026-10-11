@@ -21,9 +21,9 @@ const lexer = moo.compile({
 
 @lexer lexer
 
-main -> list {% id %}
-      | "(" _ list _ ")" {% nth(2) %}
-      | "[" _ list _ "]" {% nth(2) %}
+main -> _ list _ {% nth(1) %}
+      | _ "(" _ list _ ")" _ {% nth(3) %}
+      | _ "[" _ list _ "]" _ {% nth(3) %}
 
 list -> expr {% wrapList %}
       | list_item:+ expr:? {% extractList %}
