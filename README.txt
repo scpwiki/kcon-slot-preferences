@@ -61,6 +61,21 @@ In particular, this is useful for actual slot assignment - at the conclusion of 
 
 If the function emits an empty list, then that means that the user did not provide enough preferences and a slot will have to be assigned for them.
 
+Note that several of these keywords have aliases, making them interchangeable:
+
+    highest -> biggest, largest
+    lowest  -> smallest
+
+    fixed   -> same
+    incr    -> sequential, seq
+
+This means that the following patterns are identical:
+
+    highest incr 50XX, lowest fixed 5XXX
+
+    biggest seq 50XX, smallest same 5XXX
+
+
 DEVELOPMENT:
 
 Set up dependencies:
