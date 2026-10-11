@@ -63,8 +63,18 @@ function testAliases(input, output) {
   }
 }
 
-test('supports highest incremental patterns', () => {
+test('supports incremental patterns', () => {
   testAliases('highest incr 5XXX', [
     { order: 'highest', fixed: false, pattern: [5, null, null, null] }
+  ]);
+
+  testAliases('lowest incr 50XX', [
+    { order: 'lowest', fixed: false, pattern: [5, 0, null, null] }
+  ]);
+
+  testAliases('highest incr 5X00, lowest incr 500X, lowest incr 51XX', [
+    { order: 'highest', fixed: false, pattern: [5, null, 0, 0] },
+    { order: 'lowest', fixed: false, pattern: [5, 0, 0, null] },
+    { order: 'lowest', fixed: false, pattern: [5, 1, null, null] },
   ]);
 });
