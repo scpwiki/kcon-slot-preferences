@@ -2,7 +2,7 @@ const { Parser } = require('nearley');
 const grammar = require('./parser');
 
 /* Only perform parsing, no preference logic */
-export function parsePreferencesString(input) {
+function parsePreferencesString(input) {
   const parser = new Parser(grammar);
   parser.feed(input);
 
@@ -16,7 +16,7 @@ export function parsePreferencesString(input) {
 }
 
 /* Like listPreferences(), but first parses the string. */
-export function parseAndListPreferences(input, alreadyTaken=[]) {
+function parseAndListPreferences(input, alreadyTaken=[]) {
   const preferences = parsePreferencesString(input);
   return listPreferences(preferences, alreadyTaken);
 }
@@ -37,7 +37,7 @@ export function parseAndListPreferences(input, alreadyTaken=[]) {
  * So [9, null, null, 0] can produce 9110, 9220, 9330, etc.
  * But if the flag is false, then it goes numerically, 9010, 9020, 9030, etc.
  */
-export function listPreferences(preferences, alreadyTaken=[]) {
+function listPreferences(preferences, alreadyTaken=[]) {
   const used = new Set(alreadyTaken);
   const output = [];
 
@@ -125,3 +125,9 @@ export function listPreferences(preferences, alreadyTaken=[]) {
 
   return output;
 }
+
+module.exports = {
+  parsePreferencesString,
+  parseAndListPreferences,
+  listPreferences,
+};
