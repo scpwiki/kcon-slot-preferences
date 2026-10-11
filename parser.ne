@@ -25,10 +25,11 @@ main -> _ list _ {% nth(1) %}
       | _ "(" _ list _ ")" _ {% nth(3) %}
       | _ "[" _ list _ "]" _ {% nth(3) %}
 
-list -> expr {% wrapList %}
-      | list_item:+ expr:? {% extractList %}
+list -> list_item:* expr           {% extractList %}  # no trailing comma
+      | list_item:* last_list_item {% extractList %}  # has trailing comma
 
-list_item -> expr _ "," _ {% nth(0) %}
+list_item      -> expr _ "," _ {% nth(0) %}
+last_list_item -> expr _ ","   {% nth(0) %}
 
 expr -> number {% id %}
       | highest {% id %}
