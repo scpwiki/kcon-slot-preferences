@@ -1,19 +1,24 @@
 const { Parser } = require('nearley');
 const grammar = require('./parser');
 
+/* Only perform parsing, no preference logic */
+export function parsePreferencesString(input) {
+  const parser = new Parser(grammar);
+  parser.feed(input);
+
+  if (!parser.results[0]) {
+      throw new Error('Parser error');
+  } else if (parser.results.length !== 1) {
+      throw new Error('Ambiguous grammar');
+  }
+
+  return parser.results[0];
+}
+
 /* Like listPreferences(), but first parses the string. */
 export function parseAndListPreferences(input, alreadyTaken=[]) {
-    const parser = new Parser(grammar);
-    parser.feed(input);
-
-    if (!parser.results[0]) {
-        throw new Error('Parser error');
-    } else if (parser.results.length !== 1) {
-        throw new Error('Ambiguous grammar');
-    }
-
-    const preferences = parser.results[0];
-    return listPreferences(preferences, alreadyTaken);
+  const preferences = parsePreferencesString(input);
+  return listPreferences(preferences, alreadyTaken);
 }
 
 /*
@@ -33,90 +38,90 @@ export function parseAndListPreferences(input, alreadyTaken=[]) {
  * But if the flag is false, then it goes numerically, 9010, 9020, 9030, etc.
  */
 export function listPreferences(preferences, alreadyTaken=[]) {
-    const used = new Set(alreadyTaken);
-    const output = [];
+  const used = new Set(alreadyTaken);
+  const output = [];
 
-    function emit(number) {
-        if (!used.has(number)) {
-            used.add(number);
-            output.push(number);
-        }
+  function emit(number) {
+    if (!used.has(number)) {
+      used.add(number);
+      output.push(number);
+    }
+  }
+
+  function runPattern(order, fixed, pattern) {
+    let max;
+    if (fixed) {
+      // If fixed, then there are only 10 possible digits (0 through 9)
+      max = 10;
+    } else {
+      // Otherwise, we need to consider all the empty places in the pattern.
+      //
+      // First, determine what value we need to count up to.
+      // Since each X is a decimal digit, the number is 10^count,
+      // where count is the number of Xs.
+      const count = pattern.filter(n => n === null).length;
+      max = Math.pow(10, count);
     }
 
-    function runPattern(order, fixed, pattern) {
-        let max;
+    let reverse;
+    if (order === 'highest') {
+      // This is our way of going from biggest to smallest.
+      // Do normal 0...max-1, and then apply max-n-1 each time
+      // to get the *highest* number first instead.
+      reverse = true;
+    } else if (order === 'lowest') {
+      reverse = false;
+    } else {
+      throw new Error('Unknown order: ' + order);
+    }
+
+    function fillPattern(fill) {
+      function nextFillDigit() {
         if (fixed) {
-            // If fixed, then there are only 10 possible digits (0 through 9)
-            max = 10;
+          // If fixed, then it's always the same digit
+          return fill;
         } else {
-            // Otherwise, we need to consider all the empty places in the pattern.
-            //
-            // First, determine what value we need to count up to.
-            // Since each X is a decimal digit, the number is 10^count,
-            // where count is the number of Xs.
-            const count = pattern.filter(n => n === null).length;
-            max = Math.pow(10, count);
+          // Otherwise, we need to get the next digit in line.
+          const digit = fill % 10;
+          fill = Math.trunc(fill / 10);
+          return digit;
+        }
+      }
+
+      // We go in reverse order in the pattern so we get
+      // the least significant digits of 'fill' first.
+      // (Only relevant if not fixed)
+      let number = 0;
+      for (let i = pattern.length - 1; i >= 0; i--) {
+        let digit = pattern[i];
+        if (digit === null) {
+          digit = nextFillDigit();
         }
 
-        let reverse;
-        if (order === 'highest') {
-            // This is our way of going from biggest to smallest.
-            // Do normal 0...max-1, and then apply max-n-1 each time
-            // to get the *highest* number first instead.
-            reverse = true;
-        } else if (order === 'lowest') {
-            reverse = false;
-        } else {
-            throw new Error('Unknown order: ' + order);
-        }
+        // Index 0 of the pattern array is the *most* significant digit.
+        const place = pattern.length - i - 1;
+        number += digit * Math.pow(10, place);
+      }
 
-        function fillPattern(fill) {
-            function nextFillDigit() {
-                if (fixed) {
-                    // If fixed, then it's always the same digit
-                    return fill;
-                } else {
-                    // Otherwise, we need to get the next digit in line.
-                    const digit = fill % 10;
-                    fill = Math.trunc(fill / 10);
-                    return digit;
-                }
-            }
-
-            // We go in reverse order in the pattern so we get
-            // the least significant digits of 'fill' first.
-            // (Only relevant if not fixed)
-            let number = 0;
-            for (let i = pattern.length - 1; i >= 0; i--) {
-                let digit = pattern[i];
-                if (digit === null) {
-                    digit = nextFillDigit();
-                }
-
-                // Index 0 of the pattern array is the *most* significant digit.
-                const place = pattern.length - i - 1;
-                number += digit * Math.pow(10, place);
-            }
-
-            return number;
-        }
-
-        for (let i = 0; i < max; i++) {
-            const fill = reverse ? max - i - 1 : i;
-            const value = fillPattern(fill);
-            emit(value);
-        }
+      return number;
     }
 
-    for (const preference of preferences) {
-        if (typeof preference === 'number') {
-            // fixed value
-            emit(preference);
-        } else {
-            // pattern
-            runPattern(preference.order, preference.fixed, preference.pattern);
-        }
+    for (let i = 0; i < max; i++) {
+      const fill = reverse ? max - i - 1 : i;
+      const value = fillPattern(fill);
+      emit(value);
     }
+  }
 
-    return output;
+  for (const preference of preferences) {
+    if (typeof preference === 'number') {
+      // fixed value
+      emit(preference);
+    } else {
+      // pattern
+      runPattern(preference.order, preference.fixed, preference.pattern);
+    }
+  }
+
+  return output;
 }
