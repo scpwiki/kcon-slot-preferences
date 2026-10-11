@@ -35,24 +35,36 @@ test('trailing commas are ignored for 2-item lists', () => {
   testWhitespace('5000 , 5001 ,', [5000, 5001]);
 });
 
+function testAliases(input, output) {
+  expect(parse(input)).toStrictEqual(output);
+
+  if (input.includes('highest')) {
+    expect(parse(input.replace('highest', 'high'))).toStrictEqual(output);
+    expect(parse(input.replace('highest', 'biggest'))).toStrictEqual(output);
+    expect(parse(input.replace('highest', 'big'))).toStrictEqual(output);
+    expect(parse(input.replace('highest', 'largest'))).toStrictEqual(output);
+    expect(parse(input.replace('highest', 'large'))).toStrictEqual(output);
+  }
+
+  if (input.includes('lowest')) {
+    expect(parse(input.replace('lowest', 'low'))).toStrictEqual(output);
+    expect(parse(input.replace('lowest', 'smallest'))).toStrictEqual(output);
+    expect(parse(input.replace('lowest', 'small'))).toStrictEqual(output);
+  }
+
+  if (input.includes('fixed')) {
+    expect(parse(input.replace('fixed', 'same'))).toStrictEqual(output);
+  }
+
+  if (input.includes('incr')) {
+    expect(parse(input.replace('incr', 'incremental'))).toStrictEqual(output);
+    expect(parse(input.replace('incr', 'seq'))).toStrictEqual(output);
+    expect(parse(input.replace('incr', 'sequential'))).toStrictEqual(output);
+  }
+}
+
 test('supports highest incremental patterns', () => {
-  expect(parse('highest incremental 5XXX')).toStrictEqual([
+  testAliases('highest incr 5XXX', [
     { order: 'highest', fixed: false, pattern: [5, null, null, null] }
-  ]);
-
-  expect(parse('highest incr 50XX')).toStrictEqual([
-    { order: 'highest', fixed: false, pattern: [5, 0, null, null] }
-  ]);
-
-  expect(parse('high incr 5X2X')).toStrictEqual([
-    { order: 'highest', fixed: false, pattern: [5, null, 2, null] }
-  ]);
-
-  expect(parse('biggest incremental 50XX')).toStrictEqual([
-    { order: 'highest', fixed: false, pattern: [5, 0, null, null] }
-  ]);
-
-  expect(parse('big incr 500X')).toStrictEqual([
-    { order: 'highest', fixed: false, pattern: [5, 0, 0, null] }
   ]);
 });
