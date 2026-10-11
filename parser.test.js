@@ -78,3 +78,19 @@ test('supports incremental patterns', () => {
     { order: 'lowest', fixed: false, pattern: [5, 1, null, null] },
   ]);
 });
+
+test('supports fixed patterns', () => {
+  testAliases('highest fixed 5XXX', [
+    { order: 'highest', fixed: true, pattern: [5, null, null, null] }
+  ]);
+
+  testAliases('lowest fixed 5XX0', [
+    { order: 'lowest', fixed: true, pattern: [5, null, null, 0] }
+  ]);
+
+  testAliases('lowest fixed 50XX, lowest fixed 5X0X, lowest fixed 5XX0', [
+    { order: 'lowest', fixed: true, pattern: [5, 0, null, null] },
+    { order: 'lowest', fixed: true, pattern: [5, null, 0, null] },
+    { order: 'lowest', fixed: true, pattern: [5, null, null, 0] }
+  ]);
+});
