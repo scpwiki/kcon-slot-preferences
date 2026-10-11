@@ -70,9 +70,9 @@ function extractList(d) {
 var grammar = {
     Lexer: lexer,
     ParserRules: [
-    {"name": "main", "symbols": ["list"], "postprocess": id},
-    {"name": "main", "symbols": [{"literal":"("}, "_", "list", "_", {"literal":")"}], "postprocess": nth(2)},
-    {"name": "main", "symbols": [{"literal":"["}, "_", "list", "_", {"literal":"]"}], "postprocess": nth(2)},
+    {"name": "main", "symbols": ["_", "list", "_"], "postprocess": nth(1)},
+    {"name": "main", "symbols": ["_", {"literal":"("}, "_", "list", "_", {"literal":")"}, "_"], "postprocess": nth(3)},
+    {"name": "main", "symbols": ["_", {"literal":"["}, "_", "list", "_", {"literal":"]"}, "_"], "postprocess": nth(3)},
     {"name": "list", "symbols": ["expr"], "postprocess": wrapList},
     {"name": "list$ebnf$1", "symbols": ["list_item"]},
     {"name": "list$ebnf$1", "symbols": ["list$ebnf$1", "list_item"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
