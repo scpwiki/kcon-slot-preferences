@@ -29,10 +29,6 @@ function empty(d) {
     return null;
 }
 
-function list(d) {
-    return [d[0]];
-}
-
 function nth(index) {
     return function (d) {
         return d[index];
@@ -58,10 +54,15 @@ function extractPattern(order, fixed) {
     };
 }
 
+function wrapList(d) {
+    return [d[0]];
+}
+
 function extractList(d) {
-    let list = d[0];
-    for (const nextList of d[1]) {
-        list = list.concat(nextList);
+    // copy list to avoid mutability issues
+    const list = [...d[0]];
+    if (d[1]) {
+        list.push(d[1]);
     }
     return list;
 }
@@ -69,17 +70,19 @@ function extractList(d) {
 var grammar = {
     Lexer: lexer,
     ParserRules: [
-    {"name": "main", "symbols": ["expr"], "postprocess": id},
     {"name": "main", "symbols": ["list"], "postprocess": id},
-    {"name": "expr", "symbols": ["number"], "postprocess": list},
-    {"name": "expr", "symbols": ["highest"], "postprocess": list},
-    {"name": "expr", "symbols": ["lowest"], "postprocess": list},
+    {"name": "main", "symbols": [{"literal":"("}, "_", "list", "_", {"literal":")"}], "postprocess": nth(2)},
+    {"name": "main", "symbols": [{"literal":"["}, "_", "list", "_", {"literal":"]"}], "postprocess": nth(2)},
+    {"name": "list", "symbols": ["expr"], "postprocess": wrapList},
     {"name": "list$ebnf$1", "symbols": ["list_item"]},
     {"name": "list$ebnf$1", "symbols": ["list$ebnf$1", "list_item"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "list$ebnf$2", "symbols": [{"literal":","}], "postprocess": id},
+    {"name": "list$ebnf$2", "symbols": ["expr"], "postprocess": id},
     {"name": "list$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "list", "symbols": ["expr", "list$ebnf$1", "_", "list$ebnf$2"], "postprocess": extractList},
-    {"name": "list_item", "symbols": ["_", {"literal":","}, "_", "expr"], "postprocess": nth(3)},
+    {"name": "list", "symbols": ["list$ebnf$1", "list$ebnf$2"], "postprocess": extractList},
+    {"name": "list_item", "symbols": ["expr", "_", {"literal":","}, "_"], "postprocess": nth(0)},
+    {"name": "expr", "symbols": ["number"], "postprocess": id},
+    {"name": "expr", "symbols": ["highest"], "postprocess": id},
+    {"name": "expr", "symbols": ["lowest"], "postprocess": id},
     {"name": "number", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": (d) => parseInt(d[0].value)},
     {"name": "pattern", "symbols": [(lexer.has("pattern") ? {type: "pattern"} : pattern)], "postprocess": extractRawPattern},
     {"name": "highest", "symbols": [(lexer.has("highest") ? {type: "highest"} : highest), "_", (lexer.has("fixed") ? {type: "fixed"} : fixed), "_", "pattern"], "postprocess": extractPattern('highest', true)},
