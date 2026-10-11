@@ -9,34 +9,26 @@ You can specify a list of particular numbers:
 
     5005, 5117, 5761
 
-You can also use parentheses or brackets to group choices if you wish:
+Optionally, you can wrap the list in parentheses or brackets. This has no effect on the syntax.
 
     [5010, 5015, 5020]
 
-    (5001, 5002, 5003), (5100, 5200, 5300)
+    (5001, 5002, 5003, 5004, 5005)
 
-This also supports PATTERNS. All patterns require an order ("lowest" or "highest"), followed by a pattern type ("fixed" or "incremental"). For instance:
+This also supports PATTERNS. All patterns require an order ("lowest" or "highest"), followed by a pattern type ("fixed" or "incremental" / "incr"). For instance:
 
     lowest fixed 5XXX
     highest incremental 5XXX
 
-There are also aliases:
+First, to explain ordering. Let us look at INCREMENTAL patterns:
 
-    lowest, smallest
-    highest, biggest, largest
-
-    fixed, same
-    incremental, sequential, incr, seq
-
-First, to explain ordering. Let us assume INCREMENTAL patterns:
-
-    smallest seq 5XXX
-    largest seq 5XXX
+    smallest incr 5XXX
+    largest incr 5XXX
 
 The first will make a list starting with 5001, 5002, 5003, etc.
 The second will make a list starting with 5999, 5998, 5997, etc.
 
-This treats all the Xs as a series of digits to be filled in order, thus the name "incremental" or "sequential".
+This treats all the Xs as a series of digits to be filled in order, like a separate number, thus the name "incremental".
 
 There are also FIXED patterns. These require that all placeholder digits have the same value.
 To illustrate, consider these two patterns:
@@ -47,19 +39,21 @@ To illustrate, consider these two patterns:
 The first makes a list starting with 5001, 5002, 5003, 5004, 5005 etc.
 The second makes a list starting with 5111, 5222, 5333, 5444, 5555, etc.
 
-Note that there are many fewer fixed options. By definition, for any given pattern, there can be at most 10 variants emitted.
+Note that there are many fewer options here. By definition, for any given "fixed" pattern, there can be at most 10 variants emitted.
 
 All patterns must explicitly specify if they are INCREMENTAL or FIXED.
 
-Each kind of specifier can be composed. So the following are all valid syntax:
+Here are some example patterns and the lists they produce:
+(assumes 5000 itself is excluded)
 
-    (highest incr 599X, 5002), 5022, lowest fixed 5XX0
+    lowest incr 511X, 5005
+      -> [5110, 5111, 5112, 5113, 5114, 5115, 5116, 5117, 5118, 5119, 5005]
 
-    5013, 5017, 5019, 5023, 5027
+    highest fixed 5X0X
+      -> [5909, 5808, 5707, 5606, 5505, 5404, 5303, 5202, 5101]
 
-    [smallest seq 500X, smallest seq 50X0, smallest seq 5X00], 5999, (5107, 5170)
-
-    5007, highest same 5X72, 5201, lowest same 50XX
+    lowest incr 500X, lowest incr 50X0, lowest incr 5X00
+      -> [5001, 5002, 5003, 5004, ..., 5007, 5008, 5009, 5010, 5020, 5030, 5040, ..., 5070, 5080, 5090, 5100, 5200, 5300, 5400, ..., 5700, 5800, 5900]
 
 Note that when executing parseAndListPreferences() or listPreferences(), you can pass in a list of unavailable slots. This is useful for instance, for blocking the X000 slot itself (since it is always the first-place prize, or for 9kon, blocking 9999).
 
