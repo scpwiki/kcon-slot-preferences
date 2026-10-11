@@ -21,16 +21,18 @@ const lexer = moo.compile({
 
 @lexer lexer
 
-main -> expr {% id %}
-      | list {% id %}
+main -> list {% id %}
+      | "(" _ list _ ")" {% nth(2) %}
+      | "[" _ list _ "]" {% nth(2) %}
 
-expr -> number {% list %}
-      | highest {% list %}
-      | lowest {% list %}
+list -> expr {% wrapList %}
+      | list_item:+ expr:? {% extractList %}
 
-list -> expr list_item:+ _ ",":? {% extractList %}
+list_item -> expr _ "," _ {% nth(0) %}
 
-list_item -> _ "," _ expr {% nth(3) %}
+expr -> number {% id %}
+      | highest {% id %}
+      | lowest {% id %}
 
 number -> %number {% (d) => parseInt(d[0].value) %}
 
@@ -49,10 +51,6 @@ _ -> null | %space {% empty %}
 // helpers
 function empty(d) {
     return null;
-}
-
-function list(d) {
-    return [d[0]];
 }
 
 function nth(index) {
@@ -80,10 +78,15 @@ function extractPattern(order, fixed) {
     };
 }
 
+function wrapList(d) {
+    return [d[0]];
+}
+
 function extractList(d) {
-    let list = d[0];
-    for (const nextList of d[1]) {
-        list = list.concat(nextList);
+    // copy list to avoid mutability issues
+    const list = [...d[0]];
+    if (d[1]) {
+        list.push(d[1]);
     }
     return list;
 }
