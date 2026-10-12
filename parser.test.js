@@ -197,6 +197,12 @@ test('supports mixed patterns', () => {
     5140,
     { order: 'lowest', fixed: false, pattern: [5, null, 1, 4] }
   ]);
+
+  // whitespace is optional, actually
+  testAliases('lowestincr500X,5111', [
+    { order: 'lowest', fixed: false, pattern: [5, 0, 0, null] },
+    5111
+  ]);
 });
 
 test('empty lists fail', () => {
