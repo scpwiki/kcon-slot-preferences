@@ -1,5 +1,8 @@
 const { parseAndListPreferences: parse, listPreferences: list } = require('./preferences');
 
+const parse4 = (input, alreadyTaken=[]) => parse(input, 4, alreadyTaken);
+const parse5 = (input, alreadyTaken=[]) => parse(input, 5, alreadyTaken);
+
 test('supports constant numbers', () => {
   expect(list([5005])).toStrictEqual([5005]);
   expect(list([5123, 5005, 5111, 5999])).toStrictEqual([5123, 5005, 5111, 5999]);
@@ -44,5 +47,15 @@ test('supports fixed patterns', () => {
   ])).toStrictEqual([
     5995, 5885, 5775, 5665, 5555, 5445, 5335, 5225, 5115, 5005,
     5000, 5111, 5222, 5333, 5444, 5666, 5777, 5888, 5999,
+  ]);
+});
+
+test('4-digit end-to-end parsing and listing', () => {
+  expect(parse4('[5315, highest incr 530x]')).toStrictEqual([
+    5315, 5309, 5308, 5307, 5306, 5305, 5304, 5303, 5302, 5301, 5300,
+  ]);
+
+  expect(parse4('lowest same 53XX, 5301, 5310, 5311')).toStrictEqual([
+    5300, 5311, 5322, 5333, 5344, 5355, 5366, 5377, 5388, 5399, 5301, 5310,
   ]);
 });
