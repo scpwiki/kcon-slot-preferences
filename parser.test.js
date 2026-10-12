@@ -208,3 +208,20 @@ test('empty lists fail', () => {
   expect(() => parse4('[ ]')).toThrow();
   expect(() => parse4('[,]')).toThrow();
 });
+
+test('supports digit checks', () => {
+  const input4 = '5555, lowest incr 55XX';
+  expect(parse4(input4)).toStrictEqual([
+    5555,
+    { order: 'lowest', fixed: false, pattern: [5, 5, null, null] }
+  ]);
+  expect(() => parse5(input4)).toThrow('expected 5 digits, found 4');
+
+  const input5 = '12345, 12233, highest incr 10XXX';
+  expect(parse5(input5)).toStrictEqual([
+    12345,
+    12233,
+    { order: 'highest', fixed: false, pattern: [1, 0, null, null, null] }
+  ]);
+  expect(() => parse4(input5)).toThrow('expected 4 digits, found 5');
+});
