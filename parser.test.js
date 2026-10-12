@@ -238,6 +238,11 @@ test('empty lists fail', () => {
   expect(() => parse4('[,]')).toThrow('Syntax error');
 });
 
+test('mismatched parentheses fail', () => {
+  expect(() => parse4('[5100, 5200)')).toThrow('Syntax error');
+  expect(() => parse4('(5900, 5800]')).toThrow('Syntax error');
+});
+
 test('missing order/placement in patterns fail', () => {
   expect(() => parse4('incr 5X00, fixed 50XX')).toThrow('Syntax error');
   expect(() => parse4('highest 51XX, highest 52XX')).toThrow('Syntax error');
