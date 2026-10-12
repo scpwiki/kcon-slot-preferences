@@ -197,8 +197,24 @@ test('supports mixed patterns', () => {
     5140,
     { order: 'lowest', fixed: false, pattern: [5, null, 1, 4] }
   ]);
+});
 
-  // whitespace is optional, actually
+test('supports case insensitivity in patterns', () => {
+  expect(parse4('HIGHEST INCR 50XX, 5111')).toStrictEqual([
+    { order: 'highest', fixed: false, pattern: [5, 0, null, null] },
+    5111
+  ]);
+
+  expect(parse4('Lowest  Sequential  5xxx')).toStrictEqual([
+    { order: 'lowest', fixed: false, pattern: [5, null, null, null ] }
+  ]);
+
+  expect(parse4('big SeqUENTIAL 50xX')).toStrictEqual([
+    { order: 'highest', fixed: false, pattern: [5, 0, null, null ] }
+  ]);
+});
+
+test('supports optional whitespace in patterns', () => {
   testAliases('lowestincr500X,5111', [
     { order: 'lowest', fixed: false, pattern: [5, 0, 0, null] },
     5111
