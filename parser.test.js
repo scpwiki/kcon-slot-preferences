@@ -209,6 +209,12 @@ test('empty lists fail', () => {
   expect(() => parse4('[,]')).toThrow('Syntax error');
 });
 
+test('missing order/placement in patterns fail', () => {
+  expect(() => parse4('incr 5X00, fixed 50XX')).toThrow('Syntax error');
+  expect(() => parse4('highest 51XX, highest 52XX')).toThrow('Syntax error');
+  expect(() => parse4('5X00, 50XX')).toThrow('Syntax error');
+});
+
 test('supports digit checks', () => {
   const input4 = '5555, lowest incr 55XX';
   expect(parse4(input4)).toStrictEqual([
