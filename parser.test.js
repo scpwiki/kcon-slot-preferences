@@ -200,13 +200,13 @@ test('supports mixed patterns', () => {
 });
 
 test('empty lists fail', () => {
-  expect(() => parse4('')).toThrow();
-  expect(() => parse4('[]')).toThrow();
-  expect(() => parse4('()')).toThrow();
+  expect(() => parse4('')).toThrow('Parser error');
+  expect(() => parse4('[]')).toThrow('Syntax error');
+  expect(() => parse4('()')).toThrow('Syntax error');
 
-  expect(() => parse4(' ')).toThrow();
-  expect(() => parse4('[ ]')).toThrow();
-  expect(() => parse4('[,]')).toThrow();
+  expect(() => parse4(' ')).toThrow('Parser error');
+  expect(() => parse4('[ ]')).toThrow('Syntax error');
+  expect(() => parse4('[,]')).toThrow('Syntax error');
 });
 
 test('supports digit checks', () => {
