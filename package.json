@@ -4,8 +4,9 @@
     "nearley": "^2.20.1"
   },
   "scripts": {
-    "build": "nearleyc parser.ne -o parser.js",
-    "parse": "nearley-test parser.js -q -i",
+    "build": "./build.sh",
+    "parse4": "nearley-test parser4.js -q -i",
+    "parse5": "nearley-test parser4.js -q -i",
     "railroad": "nearley-railroad parser.ne -o grammar.html",
     "test": "jest"
   }

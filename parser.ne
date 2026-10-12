@@ -2,10 +2,11 @@
 
 const moo = require('moo');
 
+// __DIGITS__ is replaced with 4 or 5 depending to make the two parser variants
 const lexer = moo.compile({
     space: {match: /\s+/, lineBreaks: true},
-    number: /[0-9]{4,}/,
-    pattern: /[xX0-9]{4,}/,
+    number: /[0-9]{__DIGITS__}/,
+    pattern: /[xX0-9]{__DIGITS__}/,
     // moo does not support /i, so we have to implement it in this annoying way
     // original code:
     //  highest: /high(?:est)?|big(?:gest)?|large(?:st)?/,
