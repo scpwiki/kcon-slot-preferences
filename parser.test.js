@@ -47,6 +47,38 @@ test('2-item lists ignore trailing commas', () => {
   testWhitespace('5000 , 5001 ,', [5000, 5001]);
 });
 
+test('2-item lists with bracket syntax', () => {
+  testWhitespace('[5000,5001]', [5000, 5001]);
+  testWhitespace('[ 5000,5001]', [5000, 5001]);
+  testWhitespace('[5000,5001 ]', [5000, 5001]);
+  testWhitespace('[ 5000,5001 ]', [5000, 5001]);
+
+  testWhitespace('[5000, 5001]', [5000, 5001]);
+  testWhitespace('[ 5000, 5001]', [5000, 5001]);
+  testWhitespace('[5000, 5001 ]', [5000, 5001]);
+  testWhitespace('[ 5000, 5001 ]', [5000, 5001]);
+
+  testWhitespace('[5000,5001,]', [5000, 5001]);
+  testWhitespace('[ 5000,5001,]', [5000, 5001]);
+  testWhitespace('[5000,5001, ]', [5000, 5001]);
+  testWhitespace('[ 5000,5001, ]', [5000, 5001]);
+
+  testWhitespace('[5000, 5001,]', [5000, 5001]);
+  testWhitespace('[ 5000, 5001,]', [5000, 5001]);
+  testWhitespace('[5000, 5001, ]', [5000, 5001]);
+  testWhitespace('[ 5000, 5001, ]', [5000, 5001]);
+
+  testWhitespace('[5000,5001 ,]', [5000, 5001]);
+  testWhitespace('[ 5000,5001 ,]', [5000, 5001]);
+  testWhitespace('[5000,5001 , ]', [5000, 5001]);
+  testWhitespace('[ 5000,5001 , ]', [5000, 5001]);
+
+  testWhitespace('[5000, 5001 ,]', [5000, 5001]);
+  testWhitespace('[ 5000, 5001 ,]', [5000, 5001]);
+  testWhitespace('[5000, 5001 , ]', [5000, 5001]);
+  testWhitespace('[ 5000, 5001 , ]', [5000, 5001]);
+});
+
 function testAliases(input, output) {
   expect(parse(input)).toStrictEqual(output);
 
