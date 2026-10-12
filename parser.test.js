@@ -195,3 +195,13 @@ test('supports mixed patterns', () => {
     { order: 'lowest', fixed: false, pattern: [5, null, 1, 4] }
   ]);
 });
+
+test('empty lists fail', () => {
+  expect(() => parse('')).toThrow();
+  expect(() => parse('[]')).toThrow();
+  expect(() => parse('()')).toThrow();
+
+  expect(() => parse(' ')).toThrow();
+  expect(() => parse('[ ]')).toThrow();
+  expect(() => parse('[,]')).toThrow();
+});
