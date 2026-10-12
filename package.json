@@ -8,6 +8,6 @@
     "parse4": "nearley-test parser4.js -q -i",
     "parse5": "nearley-test parser4.js -q -i",
     "railroad": "nearley-railroad parser.ne -o grammar.html",
-    "test": "jest"
+    "test": "jest --verbose"
   }
 }
