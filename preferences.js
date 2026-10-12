@@ -37,8 +37,8 @@ function parsePreferencesString(input, digits) {
 }
 
 /* Like listPreferences(), but first parses the string. */
-function parseAndListPreferences(input, alreadyTaken=[]) {
-  const preferences = parsePreferencesString(input);
+function parseAndListPreferences(input, digits, alreadyTaken=[]) {
+  const preferences = parsePreferencesString(input, digits);
   return listPreferences(preferences, alreadyTaken);
 }
 
