@@ -4,8 +4,8 @@ const moo = require('moo');
 
 const lexer = moo.compile({
     space: {match: /\s+/, lineBreaks: true},
-    number: /[0-9]{4}/,
-    pattern: /[xX0-9]{4}/,
+    number: /[0-9]{4,}/,
+    pattern: /[xX0-9]{4,}/,
     highest: /high(?:est)?|big(?:gest)?|large(?:st)?/,
     lowest: /low(?:est)?|small(?:est)?/,
     fixed: /fixed|same/,

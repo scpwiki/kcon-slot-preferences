@@ -1,8 +1,27 @@
 const { Parser } = require('nearley');
 const grammar = require('./parser');
 
+/* Ensure that the digits are as expected for all patterns */
+function checkDigits(preferences, digits) {
+  for (const preference of preferences) {
+    // Check that all the patterns have the expected number of digits
+    if (typeof preference === 'number') {
+      // fixed value
+      const fixedDigits = Math.ceil(Math.log10(preference));
+      if (fixedDigits !== digits) {
+        throw new Error(`Invalid number, expected ${digits} digits, found ${fixedDigits} (value ${preference})`);
+      }
+    } else {
+      // pattern
+      if (preference.pattern.length !== digits) {
+        throw new Error(`Invalid pattern, expected ${digits} digits, found ${preference.pattern.length}`);
+      }
+    }
+  }
+}
+
 /* Only perform parsing, no preference logic */
-function parsePreferencesString(input) {
+function parsePreferencesString(input, digits) {
   const parser = new Parser(grammar);
   parser.feed(input);
 
@@ -12,7 +31,9 @@ function parsePreferencesString(input) {
       throw new Error('Ambiguous grammar');
   }
 
-  return parser.results[0];
+  const preferences = parser.results[0];
+  checkDigits(preferences, digits);
+  return preferences;
 }
 
 /* Like listPreferences(), but first parses the string. */
