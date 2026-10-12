@@ -59,3 +59,10 @@ test('4-digit end-to-end parsing and listing', () => {
     5300, 5311, 5322, 5333, 5344, 5355, 5366, 5377, 5388, 5399, 5301, 5310,
   ]);
 });
+
+test('5-digit end-to-end parsing and listing', () => {
+  expect(parse5('[lowest fixed 10XXX, highest incr 1011X]')).toStrictEqual([
+    10000, 10111, 10222, 10333, 10444, 10555, 10666, 10777, 10888, 10999,
+    10119, 10118, 10117, 10116, 10115, 10114, 10113, 10112, 10110,
+  ]);
+});
