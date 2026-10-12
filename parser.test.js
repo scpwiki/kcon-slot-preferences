@@ -199,6 +199,13 @@ test('supports mixed patterns', () => {
   ]);
 });
 
+test('supports 5-digit patterns', () => {
+  expect(parse5('highest incr 1000X, lowest incr 1001X')).toStrictEqual([
+    { order: 'highest', fixed: false, pattern: [1, 0, 0, 0, null] },
+    { order: 'lowest', fixed: false, pattern: [1, 0, 0, 1, null] },
+  ]);
+});
+
 test('supports case insensitivity in patterns', () => {
   expect(parse4('HIGHEST INCR 50XX, 5111')).toStrictEqual([
     { order: 'highest', fixed: false, pattern: [5, 0, null, null] },
