@@ -11,6 +11,11 @@ const lexer = moo.compile({
     number: /[0-9]{4,}/,
     pattern: /[xX0-9]{4,}/,
     // moo does not support /i, so we have to implement it in this annoying way
+    // original code:
+    //  highest: /high(?:est)?|big(?:gest)?|large(?:st)?/,
+    //  lowest: /low(?:est)?|small(?:est)?/,
+    //  fixed: /fixed|same/,
+    //  incr: /incr(?:emental)?|seq(?:uential)?/,
     highest: /[hH][iI][gG][hH](?:[eE][sS][tT])?|[bB][iI][gG](?:[gG][eE][sS][tT])?|[lL][aA][rR][gG][eE](?:[sS][tT])?/,
     lowest: /[lL][oO][wW](?:[eE][sS][tT])?|[sS][mM][aA][lL][lL](?:[eE][sS][tT])?/,
     fixed: /[fF][iI][xX][eE][dD]|[sS][aA][mM][eE]/,
