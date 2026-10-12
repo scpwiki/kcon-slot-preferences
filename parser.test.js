@@ -138,3 +138,16 @@ test('supports fixed patterns', () => {
     { order: 'lowest', fixed: true, pattern: [5, null, null, 0] }
   ]);
 });
+
+test('supports mixed patterns', () => {
+  testAliases('5900, lowest incr 500X, highest fixed 5XXX', [
+    5900,
+    { order: 'lowest', fixed: false, pattern: [5, 0, 0, null] },
+    { order: 'highest', fixed: true, pattern: [5, null, null, null] },
+  ]);
+
+  testAliases('[5140 , lowest incr 5X14]', [
+    5140,
+    { order: 'lowest', fixed: false, pattern: [5, null, 1, 4] }
+  ]);
+});
