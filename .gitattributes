@@ -1,1 +1,2 @@
-parser.js   binary linguist-vendored linguist-generated
+parser.js           binary linguist-vendored linguist-generated
+package-lock.json   binary linguist-vendored linguist-generated
